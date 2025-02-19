@@ -2,11 +2,10 @@
 
 #include "raylib.h"
 
-#include "layout/grid.h"
+#include "layout/cell.h"
 
 Food::Food():
-  x(Grid::randomCell()),
-  y(Grid::randomCell()),
+  cell(Cell::random()),
   texture(LoadTexture("../assets/food.png"))
 {
 
@@ -17,5 +16,5 @@ Food::~Food() {
 }
 
 void Food::draw() const {
-  DrawTexture(texture, Grid::cellOrigin(x), Grid::cellOrigin(y), BLACK);
+  DrawTexture(texture, cell.ox(), cell.oy(), BLACK);
 }

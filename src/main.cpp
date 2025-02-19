@@ -3,6 +3,7 @@
 #include "layout/grid.h"
 #include "layout/theme.h"
 #include "models/food.h"
+#include "models/snake.h"
 
 int main() {
   TraceLog(LOG_INFO, "Starting game...");
@@ -11,12 +12,14 @@ int main() {
   SetTargetFPS(120);
 
   const auto food = Food();
+  const auto snake = Snake();
 
   while (!WindowShouldClose()) {
     BeginDrawing();
 
     ClearBackground(Theme::GREEN_500);
     food.draw();
+    snake.draw();
 
     EndDrawing();
   }
