@@ -2,9 +2,10 @@
 
 #include "raylib.h"
 
+#include "layout/cell.h"
+
 class Food {
-  const int x;
-  const int y;
+  const Cell cell;
   const Texture2D texture;
 
   public:
