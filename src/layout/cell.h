@@ -2,18 +2,17 @@
 
 #include "raylib.h"
 
-class Cell {
+struct Cell {
   const int x;
   const int y;
 
-  public:
-    Cell(const int& x, const int& y);
+  Cell(const int& x, const int& y);
 
-    static Cell random();
+  static Cell random();
 
-    int ox() const;
+  int ox() const;
 
-    int oy() const;
+  int oy() const;
 
-    Rectangle toRect() const;
+  Rectangle toRect() const;
 };

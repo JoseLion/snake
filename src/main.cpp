@@ -12,10 +12,12 @@ int main() {
   SetTargetFPS(120);
 
   const auto food = Food();
-  const auto snake = Snake();
+  auto snake = Snake();
 
   while (!WindowShouldClose()) {
     BeginDrawing();
+
+    snake.update();
 
     ClearBackground(Theme::GREEN_500);
     food.draw();
