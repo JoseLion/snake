@@ -5,8 +5,14 @@
 #include "layout/cell.h"
 
 class Snake {
-  std::deque<Cell> cells = { Cell(8, 12), Cell(9, 12), Cell(10, 12) };
+  std::deque<Cell> cells = { Cell(6, 9), Cell(5, 9), Cell(4, 9) };
+  int timeout = 200;
+  int pace = 200;
+  int vx = 1;
+  int vy = 0;
 
   public:
     void draw() const;
+
+    void update();
 };
