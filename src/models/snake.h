@@ -12,6 +12,10 @@ class Snake {
   int vy = 0;
 
   public:
+    const Cell& head() const;
+
+    const std::deque<Cell>& body() const;
+
     void draw() const;
 
     void update();

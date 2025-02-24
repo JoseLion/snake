@@ -11,13 +11,17 @@ int main() {
   InitWindow(Grid::SIZE, Grid::SIZE, "Snake");
   SetTargetFPS(120);
 
-  const auto food = Food();
+  auto food = Food();
   auto snake = Snake();
 
   while (!WindowShouldClose()) {
     BeginDrawing();
 
     snake.update();
+
+    if (snake.head() == food.position()) {
+      food.respawn(snake.body());
+    }
 
     ClearBackground(Theme::GREEN_500);
     food.draw();
