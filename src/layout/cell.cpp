@@ -1,5 +1,8 @@
 #include "cell.h"
 
+#include <algorithm>
+#include <deque>
+
 #include "raylib.h"
 
 #include "layout/grid.h"
@@ -12,6 +15,19 @@ Cell Cell::random() {
   const auto max = Grid::CELL_COUNT - 1;
 
   return Cell(GetRandomValue(0, max), GetRandomValue(0, max));
+}
+
+Cell Cell::random(const std::deque<Cell>& excludes) {
+  const auto next = Cell::random();
+  const auto isExcluded = std::any_of(
+    excludes.begin(),
+    excludes.end(),
+    [&](const Cell& cell) { return next == cell; }
+  );
+
+  return isExcluded
+    ? Cell::random(excludes)
+    : next;
 }
 
 int Cell::ox() const {
@@ -30,3 +46,5 @@ Rectangle Cell::toRect() const {
     Grid::CELL_SIZE,
   };
 }
+
+bool Cell::operator==(const Cell& other) const = default;

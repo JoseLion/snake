@@ -1,8 +1,18 @@
 #include "snake.h"
 
+#include <deque>
+
 #include "raylib.h"
 
 #include "layout/theme.h"
+
+const Cell& Snake::head() const {
+  return cells.front();
+}
+
+const std::deque<Cell>& Snake::body() const {
+  return cells;
+}
 
 void Snake::draw() const {
   for (const auto cell : cells) {
