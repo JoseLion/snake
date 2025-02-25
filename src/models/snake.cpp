@@ -23,8 +23,10 @@ void Snake::draw() const {
 void Snake::update(const Cell& foodPosition) {
   timeout -= static_cast<int>(GetFrameTime() * 1000);
 
+  const auto [x, y] = cells.front();
+  const auto prev = cells.at(1);
+
   if (timeout <= 0) {
-    const auto [x, y] = cells.front();
     const auto nx = x + vx;
     const auto ny = y + vy;
 
@@ -37,27 +39,23 @@ void Snake::update(const Cell& foodPosition) {
     timeout = pace;
   }
 
-  if (vx == 0) {
-    if (IsKeyPressed(KEY_LEFT)) {
-      vx = -1;
-      vy = 0;
-    }
-  
-    if (IsKeyPressed(KEY_RIGHT)) {
-      vx = 1;
-      vy = 0;
-    }
+  if (IsKeyPressed(KEY_LEFT) && prev.x != x - 1) {
+    vx = -1;
+    vy = 0;
   }
 
-  if (vy == 0) {
-    if (IsKeyPressed(KEY_UP)) {
-      vx = 0;
-      vy = -1;
-    }
-  
-    if (IsKeyPressed(KEY_DOWN)) {
-      vx = 0;
-      vy = 1;
-    }
+  if (IsKeyPressed(KEY_RIGHT) && prev.x != x + 1) {
+    vx = 1;
+    vy = 0;
+  }
+
+  if (IsKeyPressed(KEY_UP) && prev.y != y - 1) {
+    vx = 0;
+    vy = -1;
+  }
+
+  if (IsKeyPressed(KEY_DOWN) && prev.y != y + 1) {
+    vx = 0;
+    vy = 1;
   }
 }
