@@ -20,14 +20,20 @@ void Snake::draw() const {
   }
 }
 
-void Snake::update() {
+void Snake::update(const Cell& foodPosition) {
   timeout -= static_cast<int>(GetFrameTime() * 1000);
 
   if (timeout <= 0) {
     const auto [x, y] = cells.front();
+    const auto nx = x + vx;
+    const auto ny = y + vy;
 
-    cells.pop_back();
-    cells.push_front(Cell(x + vx, y + vy));
+    cells.emplace_front(nx, ny);
+
+    if (foodPosition.x != nx || foodPosition.y != ny) {
+      cells.pop_back();
+    }
+
     timeout = pace;
   }
 
