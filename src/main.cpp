@@ -17,7 +17,7 @@ int main() {
   while (!WindowShouldClose()) {
     BeginDrawing();
 
-    snake.update();
+    snake.update(food.position());
 
     if (snake.head() == food.position()) {
       food.respawn(snake.body());
