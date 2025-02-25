@@ -6,7 +6,7 @@
 
 class Snake {
   std::deque<Cell> cells = { Cell(6, 9), Cell(5, 9), Cell(4, 9) };
-  int pace = 50;
+  int pace = 150;
   int timeout = pace;
   int vx = 1;
   int vy = 0;
@@ -19,4 +19,7 @@ class Snake {
     void draw() const;
 
     void update(const Cell& foodPosition);
+
+  private:
+    int wrap(const int& coord) const;
 };

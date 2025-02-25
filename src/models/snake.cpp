@@ -2,6 +2,7 @@
 
 #include <deque>
 
+#include "layout/grid.h"
 #include "raylib.h"
 
 #include "layout/theme.h"
@@ -23,12 +24,12 @@ void Snake::draw() const {
 void Snake::update(const Cell& foodPosition) {
   timeout -= static_cast<int>(GetFrameTime() * 1000);
 
-  const auto [x, y] = cells.front();
+  const auto [x, y] = head();
   const auto prev = cells.at(1);
 
   if (timeout <= 0) {
-    const auto nx = x + vx;
-    const auto ny = y + vy;
+    const auto nx = wrap(x + vx);
+    const auto ny = wrap(y + vy);
 
     cells.emplace_front(nx, ny);
 
@@ -39,23 +40,37 @@ void Snake::update(const Cell& foodPosition) {
     timeout = pace;
   }
 
-  if (IsKeyPressed(KEY_LEFT) && prev.x != x - 1) {
+  if (IsKeyPressed(KEY_LEFT) && prev.x != wrap(x - 1)) {
     vx = -1;
     vy = 0;
   }
 
-  if (IsKeyPressed(KEY_RIGHT) && prev.x != x + 1) {
+  if (IsKeyPressed(KEY_RIGHT) && prev.x != wrap(x + 1)) {
     vx = 1;
     vy = 0;
   }
 
-  if (IsKeyPressed(KEY_UP) && prev.y != y - 1) {
+  if (IsKeyPressed(KEY_UP) && prev.y != wrap(y - 1)) {
     vx = 0;
     vy = -1;
   }
 
-  if (IsKeyPressed(KEY_DOWN) && prev.y != y + 1) {
+  if (IsKeyPressed(KEY_DOWN) && prev.y != wrap(y + 1)) {
     vx = 0;
     vy = 1;
   }
+}
+
+int Snake::wrap(const int& coord) const {
+  const auto max = Grid::CELL_COUNT - 1;
+
+  if (coord < 0) {
+    return max;
+  }
+
+  if (coord > max) {
+    return 0;
+  }
+
+  return coord;
 }
