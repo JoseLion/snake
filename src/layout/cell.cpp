@@ -31,11 +31,11 @@ Cell Cell::random(const std::deque<Cell>& excludes) {
 }
 
 int Cell::ox() const {
-  return x * Grid::CELL_SIZE;
+  return this->x * Grid::CELL_SIZE;
 }
 
 int Cell::oy() const {
-  return y * Grid::CELL_SIZE;
+  return this->y * Grid::CELL_SIZE;
 }
 
 Rectangle Cell::toRect() const {

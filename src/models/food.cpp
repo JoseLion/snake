@@ -18,13 +18,13 @@ Food::~Food() {
 }
 
 void Food::draw() const {
-  DrawTexture(texture, cell.ox(), cell.oy(), BLACK);
+  DrawTexture(this->texture, this->cell.ox(), this->cell.oy(), BLACK);
 }
 
 Cell Food::position() const {
-  return cell;
+  return this->cell;
 }
 
 void Food::respawn(const std::deque<Cell>& excludes) {
-  cell = Cell::random(excludes);
+  this->cell = Cell::random(excludes);
 }
