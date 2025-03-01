@@ -2,6 +2,7 @@
 
 #include "layout/grid.h"
 #include "layout/theme.h"
+#include "models/game.h"
 #include "models/food.h"
 #include "models/snake.h"
 
@@ -11,21 +12,32 @@ int main() {
   InitWindow(Grid::SIZE, Grid::SIZE, "Snake");
   SetTargetFPS(120);
 
+  auto game = Game();
   auto food = Food();
-  auto snake = Snake();
+  auto snake = Snake([&game]() { game.stop(); });
+
+  game.onRestart([&snake, &food]() {
+    snake.respawn();
+    food.respawn(snake.body());
+  });
 
   while (!WindowShouldClose()) {
     BeginDrawing();
 
-    snake.update(food.position());
+    game.update();
 
-    if (snake.head() == food.position()) {
-      food.respawn(snake.body());
+    if (!game.isGameOver()) {
+      snake.update(food.position());
+  
+      if (snake.head() == food.position()) {
+        food.respawn(snake.body());
+      }
     }
 
     ClearBackground(Theme::GREEN_500);
     food.draw();
     snake.draw();
+    game.drawGameOver();
 
     EndDrawing();
   }
