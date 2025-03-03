@@ -14,7 +14,23 @@ int main() {
 
   auto game = Game();
   auto food = Food();
-  auto snake = Snake([&game]() { game.stop(); });
+  auto snake = Snake();
+
+  snake.onMove([&food, &game, &snake](const Cell& head) {
+    if (food.position() == head) {
+      snake.grow();
+      game.addScore(100);
+      food.respawn(snake.body());
+    }
+  });
+
+  snake.onEatTail([&game]() {
+    game.stop();
+  });
+
+  game.onLevelUp([&snake]() {
+    snake.speedUp();
+  });
 
   game.onRestart([&snake, &food]() {
     snake.respawn();
@@ -26,18 +42,17 @@ int main() {
 
     game.update();
 
-    if (!game.isGameOver()) {
-      snake.update(food.position());
-  
-      if (snake.head() == food.position()) {
-        food.respawn(snake.body());
-      }
+    if (!game.isOver()) {
+      snake.update();
     }
 
     ClearBackground(Theme::GREEN_500);
     food.draw();
     snake.draw();
+    game.drawScore();
     game.drawGameOver();
+
+    DrawFPS(10, 10);
 
     EndDrawing();
   }

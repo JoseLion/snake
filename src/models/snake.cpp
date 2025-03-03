@@ -8,10 +8,6 @@
 #include "layout/grid.h"
 #include "layout/theme.h"
 
-Snake::Snake(const Callback& onSelfEat): onSelfEat(onSelfEat) {
-
-}
-
 const Cell& Snake::head() const {
   return this->cells.front();
 }
@@ -20,13 +16,32 @@ const std::deque<Cell>& Snake::body() const {
   return this->cells;
 }
 
-void Snake::draw() const {
-  for (const auto cell : this->cells) {
-    DrawRectangleRounded(cell.toRect(), 0.5f, 6, Theme::GREEN_900);
-  }
+void Snake::onMove(const Consumer<Cell>&& consumer) {
+  this->moved = consumer;
 }
 
-void Snake::update(const Cell& foodPosition) {
+void Snake::onEatTail(const Runnable&& runnable) {
+  this->ateTail = runnable;
+}
+
+void Snake::grow() {
+  this->shouldGrow = true;
+}
+
+void Snake::respawn() {
+  this->cells = { Cell(6, 9), Cell(5, 9), Cell(4, 9) };
+  this->pace = 150;
+  this->timeout = pace;
+  this->vx = 1;
+  this->vy = 0;
+}
+
+void Snake::speedUp() {
+  this->pace = static_cast<int>(this->pace * 0.9);
+  this->timeout = pace;
+}
+
+void Snake::update() {
   this->timeout -= static_cast<int>(GetFrameTime() * 1000);
 
   const auto [x, y] = this->head();
@@ -36,17 +51,19 @@ void Snake::update(const Cell& foodPosition) {
     const auto nx = this->wrap(x + this->vx);
     const auto ny = this->wrap(y + this->vy);
 
-    if (this->willSelfEat(nx, ny)) {
-      this->onSelfEat();
+    if (this->willEatTail(nx, ny)) {
+      this->ateTail();
       return;
     }
 
-    this->cells.emplace_front(nx, ny);
-
-    if (foodPosition.x != nx || foodPosition.y != ny) {
+    if (this->shouldGrow) {
+      this->shouldGrow = false;
+    } else {
       this->cells.pop_back();
     }
 
+    this->cells.emplace_front(nx, ny);
+    this->moved(this->head());
     this->timeout = this->pace;
   }
 
@@ -71,20 +88,18 @@ void Snake::update(const Cell& foodPosition) {
   }
 }
 
-bool Snake::willSelfEat(const int& nx, const int& ny) const {
+void Snake::draw() const {
+  for (const auto cell : this->cells) {
+    DrawRectangleRounded(cell.toRect(), 0.5f, 6, Theme::GREEN_900);
+  }
+}
+
+bool Snake::willEatTail(const int& nx, const int& ny) const {
   return std::any_of(
     this->cells.begin() + 1,
     this->cells.end(),
     [&](const Cell& cell) { return cell.x == nx && cell.y == ny; }
   );
-}
-
-void Snake::respawn() {
-  this->cells = { Cell(6, 9), Cell(5, 9), Cell(4, 9) };
-  this->pace = 150;
-  this->timeout = pace;
-  this->vx = 1;
-  this->vy = 0;
 }
 
 int Snake::wrap(const int& coord) const {

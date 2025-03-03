@@ -1,21 +1,28 @@
 #pragma once
 
-#include <functional>
+#include "helpers/functions.h"
 
 class Game {
-  using Callback = std::function<void()>;
-
-  Callback doRestart = []() { /* do nothing */};
   bool gameOver = true;
+  int score = 0;
+
+  Runnable restart = Noop::runnable;
+  Runnable levelUp = Noop::runnable;
 
   public:
-    bool isGameOver() const;
+    bool isOver() const;
 
-    void onRestart(const Callback& doRestart);
+    void onRestart(const Runnable&& runnable);
+
+    void onLevelUp(const Runnable&& runnable);
+
+    void addScore(const int& value);
 
     void stop();
 
     void update();
 
     void drawGameOver() const;
+
+    void drawScore() const;
 };

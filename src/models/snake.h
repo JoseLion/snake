@@ -1,36 +1,42 @@
 #pragma once
 
 #include <deque>
-#include <functional>
 
+#include "helpers/functions.h"
 #include "layout/cell.h"
 
 class Snake {
-  using Callback = std::function<void()>;
-
   std::deque<Cell> cells = { Cell(6, 9), Cell(5, 9), Cell(4, 9) };
   int pace = 150;
   int timeout = pace;
   int vx = 1;
   int vy = 0;
+  bool shouldGrow = false;
 
-  const Callback onSelfEat;
+  Consumer<Cell> moved = Noop::consumer<Cell>;
+  Runnable ateTail = Noop::runnable;
 
   public:
-    explicit Snake(const Callback& onSelfEat);
-
     const Cell& head() const;
 
     const std::deque<Cell>& body() const;
 
-    void draw() const;
+    void onMove(const Consumer<Cell>&& consumer);
 
-    void update(const Cell& foodPosition);
+    void onEatTail(const Runnable&& runnable);
+
+    void grow();
     
     void respawn();
+
+    void speedUp();
+
+    void update();
+
+    void draw() const;
     
     private:
-      bool willSelfEat(const int& nx, const int& ny) const;
+      bool willEatTail(const int& nx, const int& ny) const;
 
       int wrap(const int& coord) const;
 };

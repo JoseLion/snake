@@ -5,12 +5,24 @@
 #include "layout/grid.h"
 #include "layout/theme.h"
 
-bool Game::isGameOver() const {
+bool Game::isOver() const {
   return this->gameOver;
 }
 
-void Game::onRestart(const Callback& callback) {
-  this->doRestart = callback;
+void Game::onRestart(const Runnable&& runnable) {
+  this->restart = runnable;
+}
+
+void Game::onLevelUp(const Runnable&& runnable) {
+  this->levelUp = runnable;
+}
+
+void Game::addScore(const int& value) {
+  this->score += value;
+
+  if (this->score % 500 == 0) {
+    this->levelUp();
+  }
 }
 
 void Game::stop() {
@@ -19,8 +31,9 @@ void Game::stop() {
 
 void Game::update() {
   if (this->gameOver && IsKeyPressed(KEY_SPACE)) {
-    this->doRestart();
+    this->score = 0;
     this->gameOver = false;
+    this->restart();
   }
 }
 
@@ -41,4 +54,12 @@ void Game::drawGameOver() const {
     DrawText(title, titleX, titleY, titleSize, Theme::GREEN_50);
     DrawText(info, infoX, infoY, infoSize, Theme::GREEN_50);
   }
+}
+
+void Game::drawScore() const {
+  const auto scoreText = TextFormat("Score: %i", this->score);
+  const auto size = 30;
+  const auto x = Grid::SIZE - MeasureText(scoreText, size) - 10;
+
+  DrawText(scoreText, x, 10, size, Theme::GREEN_50);
 }
