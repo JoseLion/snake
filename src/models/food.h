@@ -7,7 +7,8 @@
 #include "layout/cell.h"
 
 class Food {
-  const Texture2D texture;
+  const Texture2D texture = LoadTexture("../assets/texture/food.png");
+
   Cell cell;
 
   public:

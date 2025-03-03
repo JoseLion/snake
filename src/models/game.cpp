@@ -5,6 +5,11 @@
 #include "layout/grid.h"
 #include "layout/theme.h"
 
+Game::~Game() {
+  UnloadSound(this->scoreFx);
+  UnloadSound(this->levelUpFx);
+}
+
 bool Game::isOver() const {
   return this->gameOver;
 }
@@ -18,9 +23,11 @@ void Game::onLevelUp(const Runnable&& runnable) {
 }
 
 void Game::addScore(const int& value) {
+  PlaySound(this->scoreFx);
   this->score += value;
 
   if (this->score % 500 == 0) {
+    PlaySound(this->levelUpFx);
     this->levelUp();
   }
 }
