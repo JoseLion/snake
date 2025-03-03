@@ -6,10 +6,7 @@
 
 #include "layout/cell.h"
 
-Food::Food():
-  texture(LoadTexture("../assets/food.png")),
-  cell(Cell::random())
-{
+Food::Food(): cell(Cell::random()) {
 
 }
 

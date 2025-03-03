@@ -4,8 +4,11 @@
 
 #include "helpers/functions.h"
 #include "layout/cell.h"
+#include "raylib.h"
 
 class Snake {
+  const Sound eatTailFx = LoadSound("../assets/sound/hit.wav");
+
   std::deque<Cell> cells = { Cell(6, 9), Cell(5, 9), Cell(4, 9) };
   int pace = 150;
   int timeout = pace;
@@ -17,6 +20,8 @@ class Snake {
   Runnable ateTail = Noop::runnable;
 
   public:
+    ~Snake();
+
     const Cell& head() const;
 
     const std::deque<Cell>& body() const;

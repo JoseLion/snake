@@ -8,6 +8,10 @@
 #include "layout/grid.h"
 #include "layout/theme.h"
 
+Snake::~Snake() {
+  UnloadSound(this->eatTailFx);
+}
+
 const Cell& Snake::head() const {
   return this->cells.front();
 }
@@ -52,6 +56,7 @@ void Snake::update() {
     const auto ny = this->wrap(y + this->vy);
 
     if (this->willEatTail(nx, ny)) {
+      PlaySound(this->eatTailFx);
       this->ateTail();
       return;
     }

@@ -10,6 +10,7 @@ int main() {
   TraceLog(LOG_INFO, "Starting game...");
 
   InitWindow(Grid::SIZE, Grid::SIZE, "Snake");
+  InitAudioDevice();
   SetTargetFPS(120);
 
   auto game = Game();
