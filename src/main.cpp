@@ -10,6 +10,7 @@ int main() {
   TraceLog(LOG_INFO, "Starting game...");
 
   InitWindow(Grid::SIZE, Grid::SIZE, "Snake");
+  SetWindowState(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI);
   InitAudioDevice();
   SetTargetFPS(120);
 
@@ -41,6 +42,8 @@ int main() {
   while (!WindowShouldClose()) {
     BeginDrawing();
 
+    snake.handleInput();
+  
     game.update();
 
     if (!game.isOver()) {
