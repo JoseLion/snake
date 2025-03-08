@@ -36,6 +36,8 @@ class Snake {
 
     void speedUp();
 
+    void handleInput();
+
     void update();
 
     void draw() const;

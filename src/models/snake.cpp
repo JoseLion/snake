@@ -45,11 +45,48 @@ void Snake::speedUp() {
   this->timeout = pace;
 }
 
+void Snake::handleInput() {
+  const auto [x, y] = this->head();
+  const auto prev = this->cells.at(1);
+
+  switch (GetKeyPressed()) {
+    case KEY_LEFT:
+      if (prev.x != this->wrap(x - 1)) {
+        this->vx = -1;
+        this->vy = 0;
+      }
+      break;
+
+    case KEY_RIGHT:
+      if (prev.x != this->wrap(x + 1)) {
+        this->vx = 1;
+        this->vy = 0;
+      }
+      break;
+
+    case KEY_UP:
+      if (prev.y != this->wrap(y - 1)) {
+        this->vx = 0;
+        this->vy = -1;
+      }
+      break;
+
+    case KEY_DOWN:
+      if (prev.y != this->wrap(y + 1)) {
+        this->vx = 0;
+        this->vy = 1;
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
 void Snake::update() {
   this->timeout -= static_cast<int>(GetFrameTime() * 1000);
 
   const auto [x, y] = this->head();
-  const auto prev = this->cells.at(1);
 
   if (this->timeout <= 0) {
     const auto nx = this->wrap(x + this->vx);
@@ -70,26 +107,6 @@ void Snake::update() {
     this->cells.emplace_front(nx, ny);
     this->moved(this->head());
     this->timeout = this->pace;
-  }
-
-  if (IsKeyPressed(KEY_LEFT) && prev.x != this->wrap(x - 1)) {
-    this->vx = -1;
-    this->vy = 0;
-  }
-
-  if (IsKeyPressed(KEY_RIGHT) && prev.x != this->wrap(x + 1)) {
-    this->vx = 1;
-    this->vy = 0;
-  }
-
-  if (IsKeyPressed(KEY_UP) && prev.y != this->wrap(y - 1)) {
-    this->vx = 0;
-    this->vy = -1;
-  }
-
-  if (IsKeyPressed(KEY_DOWN) && prev.y != this->wrap(y + 1)) {
-    this->vx = 0;
-    this->vy = 1;
   }
 }
 
